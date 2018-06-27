@@ -2,6 +2,10 @@ use super::*;
 use lsp::notification::Notification;
 use lsp::request::Request;
 
+fn is_readable_buftype(buftype: String) -> bool {
+    buftype.is_empty() || buftype.eq("nofile")
+}
+
 impl State {
     /////// Utils ///////
 
@@ -816,7 +820,7 @@ impl State {
             ],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(Value::Null);
         }
 
@@ -936,7 +940,7 @@ impl State {
             params,
         )?;
 
-        if !buftype.is_empty() {
+        if !is_readable_buftype(buftype) {
             return Ok(Value::Null);
         }
 
@@ -1134,7 +1138,7 @@ impl State {
             ],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(Value::Null);
         }
 
@@ -1217,7 +1221,7 @@ impl State {
             ],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(Value::Null);
         }
 
@@ -1393,7 +1397,7 @@ impl State {
             &[VimVar::Buftype, VimVar::LanguageId, VimVar::Handle],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(Value::Null);
         }
 
@@ -1511,7 +1515,7 @@ impl State {
             params,
         )?;
 
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(());
         }
 
@@ -1549,7 +1553,7 @@ impl State {
             &[VimVar::Buftype, VimVar::LanguageId, VimVar::Filename],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(());
         }
         if !self.get(|state| Ok(state.text_documents.contains_key(&filename)))? {
@@ -1617,7 +1621,7 @@ impl State {
             &[VimVar::Buftype, VimVar::LanguageId, VimVar::Filename],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(());
         }
         let uri = filename.to_url()?;
@@ -1640,7 +1644,7 @@ impl State {
             &[VimVar::Buftype, VimVar::LanguageId, VimVar::Filename],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() {
             return Ok(());
         }
 
@@ -1907,7 +1911,7 @@ impl State {
             &[VimVar::Buftype, VimVar::LanguageId, VimVar::Filename],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() || filename.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() || filename.is_empty() {
             return Ok(());
         }
         let autoStart: u8 = self.eval("!!get(g:, 'LanguageClient_autoStart', 1)")?;
@@ -1929,7 +1933,7 @@ impl State {
             &[VimVar::Buftype, VimVar::LanguageId, VimVar::Filename],
             params,
         )?;
-        if !buftype.is_empty() || languageId.is_empty() || filename.is_empty() {
+        if !is_readable_buftype(buftype) || languageId.is_empty() || filename.is_empty() {
             return Ok(());
         }
 
@@ -2022,7 +2026,7 @@ impl State {
         info!("Begin {}", NOTIFICATION__HandleCursorMoved);
         let (buftype, filename, line): (String, String, u64) =
             self.gather_args(&[VimVar::Buftype, VimVar::Filename, VimVar::Line], params)?;
-        if !buftype.is_empty() || line == self.get(|state| Ok(state.last_cursor_line))? {
+        if !is_readable_buftype(buftype) || line == self.get(|state| Ok(state.last_cursor_line))? {
             return Ok(());
         }
 
@@ -2231,7 +2235,7 @@ impl State {
             ],
             params,
         )?;
-        if !buftype.is_empty() {
+        if !is_readable_buftype(buftype) {
             return Ok(Value::Null);
         }
         let diag = self.get(|state| {
@@ -2420,7 +2424,7 @@ impl State {
             &params,
         )?;
 
-        if !buftype.is_empty() || filename.is_empty() {
+        if !is_readable_buftype(buftype) || filename.is_empty() {
             return Ok(Value::Null);
         }
 
